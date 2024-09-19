@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://code.jquery.c1om/jquery-3.7.1.min.js"
+integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<style>
+    .btn{
+     float: right;
+    }
+    </style>
+    <style>
+    .heloo{
+     color:red;
+    }
+    .not-heloo{
+     color:green;
+    }
+        .service-category img {
+            border-radius: 50%;
+            width: 40%;
+            height: auto;
+            object-fit: cover;
+        }
+        .service-category {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .service-category h5 {
+            margin-top: 10px;
+        }
+    
+
+ </style>
+<script>
+    $(document).ready(function(){
+        $("#textEmail").keyup(function(){
+            let email=$("#textEmail").val();
+            var r=/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+            if(r.test(email)==false){
+                $("#emailcheck").html("INVALID").addClass("heloo").removeClass("not-heloo");
+            }
+            else{
+                $("#emailcheck").html("VALID").addClass("not-heloo").removeClass("heloo");
+            }
+        });
+    
+        $("#txtPwd").keyup(function(){
+            let password=$("#txtPwd").val();
+            var r=/(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+            if(r.test(password)==false){
+                $("#pass").html("INVALID").addClass("heloo").removeClass("not-heloo");
+            }
+            else{
+                $("#pass").html("VALID").addClass("not-heloo").removeClass("heloo");
+            }
+        });
+        $("#sign").click(function(){
+            
+            let obj={
+            url:"/signup",
+            data: {
+                KuchEmail: $("#textEmail").val(),
+                KuchPwd: $("#txtPwd").val(),
+                Kuchuse:$("#use").val(),
+            }
+           }
+           $.ajax(obj).done(function(resp){
+              $("#erR").html(resp);
+              if(resp=="Record saved successfully"){
+                $("#erR").removeClass("heloo").addClass("not-heloo");
+              }
+           }).fail(function(err){
+            $("#erR").html(err);
+           })
+        })
+       
+    
+        $("#Log").click(function(){
+            let email = $("#textem").val();
+            let obj={
+                url:"/login",
+                data:{
+                    Kuchem:$("#textem").val(),
+                    KuchP:$("#txtP").val(),
+                }
+            }
+            $.ajax(obj).done(function(resp){
+                alert(resp);
+                if(resp=="Customer-dashboard"){
+                // localStorage.setItem("user",email);
+                localStorage.setItem("user",email);
+                // alert(localStorage.getItem("user"));
+                window.location.href="/customerDash";
+                
+            }
+            else if(resp=="Service-provider-dashboard"){
+                localStorage.setItem("user",email);
+                window.location.href="/service-provider-Dash";
+            }
+            }).fail(function(err){
+                alert("ERROR="+err);
+            })
+    })
+})
+    </script>
+    
+</head>
+<body>
+    <div style="height:800px; width:1250px; margin:auto; ">
+   
+    <div style="height:800px; width:1250px; margin:auto; ">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <b><p>Samadhaan.com</p></b>
+            </div>
+            <div>
+              <button type="button" class="btn btn-outline-secondary btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</button>
+              <button type="button" class="btn btn-outline-secondary btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#modalSignup">Signup</button>
+            </div>
+          </div>
+          
+               
+               <form >
+               <div class="modal fade" id="modalSignup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <h1 class="modal-title fs-5 text-white" id="exampleModalLabel ">SIGNUP</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" >
+                        
+                                <div class="mb-3">
+                                    <label for="textEmail" class="form-label">Email address</label>
+                                    <span id="emailcheck">
+                                    </span>
+                                    <input type="email" autofocus name="txtEmail" class="form-control" id="textEmail" aria-describedby="emailHelp">
+                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="txtPwd" class="form-label">Password</label>
+                                    <span id="pass"></span>
+                            
+                                            <input type="password" name="textPwd" class="form-control" id="txtPwd" value="Admin@1234"> 
+                                            
+                                        </div>
+                                        
+                        
+                                <div class="mb-3">
+                                    <label for="use" class="form-label">User Type</label>
+                                   
+                                    <select class="form-control" name="user" id="use">
+                                        <option value="Customer-dashboard">Customer-dashboard</option>
+                                        <option value="Service-provider-dashboard">Service-provider-dashboard</option>
+                                    </select>
+                                
+                                </div> 
+                                <input type="button" class="btn btn-primary btn-lg mt-3 position-absolute top-99 start-50 translate-middle" id="sign" value="SIGNUP">
+                        </div>
+                       <div style="height:30px;"></div>
+                       <span id="erR" style="margin-left: 30%;"></span>
+                       <div style="height:10px;"></div>
+                           </div>
+                    
+               </div>     
+                        </div>
+        
+                    </form>
+<form >
+    <div class="modal fade" id="modalLogin" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog">
+         <div class="modal-content">
+             <div class="modal-header bg-primary">
+                 <h1 class="modal-title fs-5 text-white" id="exampleModalLabel ">LOGIN</h1>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+             </div>
+             <div class="modal-body">
+             
+                     <div class="mb-3">
+                         <label for="textem" class="form-label">Email address</label>
+                         <input type="email" name="txtem" class="form-control" id="textem" aria-describedby="emailHelp">
+
+                     </div>
+                     <div class="mb-3">
+                         <label for="txtP" class="form-label">Password</label>
+                         <input type="password" name="textP" class="form-control" id="txtP"> 
+                         </div>
+                         <input type="button" class="btn btn-primary btn-lg mt-3 position-absolute top-99 start-50 translate-middle " id="Log" value="LOGIN">
+                         </div>
+                         <div style="height:30px;"></div>
+                         </div>
+                         </div>
+                         </div>
+                         </form>
+                        <br><br>
+                         <div class="d-flex justify-content-center">
+                            <div class="d-flex">
+                                <div>
+                                    <h3>Welcome to </h3>
+                                    <h3>Samadhaan.com!</h3>
+                                    <p>Affordable projects,skilled help!Find local labors,<br>
+                                    contactors and engineers with ease. Your <br>
+                                    community's go-to for hassle-free projects . Quality, <br>
+                                    convenience,and reliability -that's Samadhaan.com!</p>
+                                  </div>
+                              <div class="me-3">
+                        
+                                <img src="https://img.freepik.com/free-vector/organic-flat-customer-support_23-2148881015.jpg" alt="Description" style="width: 300px; height: auto;">
+                              </div>
+                             
+                            </div>
+                          </div>
+                          <br><br>
+                          <div><center><h3>Services We are Providing...</h3></center>
+                            <br>
+                          </div>
+                          <div class="container">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4 service-category">
+                                    <img src="https://etimg.etb2bimg.com/photo/78030866.cms" alt="Car Services">
+                                    <br>
+                                    <h7>Car Services</h7>
+                                </div>
+                                <div class="col-sm-6 col-md-4 service-category">
+                                    <img src="https://img.freepik.com/premium-photo/electricity-electrical-maintenance-service-engineer-hand-holding-ac-voltmeter-checking-electric-current-voltage-circuit-breaker-terminal-cable-wiring-main-power-distribution-board_101448-4286.jpg" alt="Electrical Services">
+                                    <br>
+                                    <h7>Electrical Services</h7>
+                                </div>
+                                <div class="col-sm-6 col-md-4 service-category">
+                                    <img src="https://content.jdmagicbox.com/comp/def_content/gardening-services/cphv9pqwvk-gardening-services-3-kl95b.jpg" alt="Gardening Services">
+                                    <br>
+                                    <h7>Gardening Services</h7>
+                                </div>
+                                <div class="col-sm-6 col-md-4 service-category">
+                                    <img src="https://content.jdmagicbox.com/comp/delhi/d1/011pxx11.xx11.230325110557.h5d1/catalogue/geetanjali-maid-bureau-badarpur-delhi-placement-services-for-maids-for-employers--6z4t268w8d.jpg" alt="Maids">
+                                    <br>
+                                    <h7>Maids</h7>
+                                </div>
+                                <div class="col-sm-6 col-md-4 service-category">
+                                    <img src="https://www.nipponpaint.co.in/wp-content/uploads/2021/08/shutterstock_505745176-1024x696.jpg" alt="Painting Services">
+                                    <br>
+                                    <h7>Painting Services</h7>
+                                </div>
+                                <div class="col-sm-6 col-md-4 service-category">
+                                    <img src="https://primeroofingfl.com/wp-content/uploads/roofing-contractor-at-work.jpg" alt="Roofing Services">
+                                    <br>
+                                    <h7>Roofing Services</h7>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+</script>
+</body>
+</html>

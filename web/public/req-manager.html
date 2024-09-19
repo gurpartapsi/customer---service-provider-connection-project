@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+ 
+ $(document).ready(function(){
+  let user=localStorage.getItem("user");
+  $("#email").val(user);
+ })
+        var module=angular.module("myModule",[]);
+        var controller=module.controller("myController",function($scope,$http)
+        {
+    
+            $scope.jsonRecordsAry=[];
+            
+            $scope.doFetchAll=function(selemailid)
+            {
+                alert(selemailid);
+                let url="/fetch?kuchemail="+selemailid;
+                $http.get(url).then(success,errors);
+                function success(response)
+                {
+                    alert(JSON.stringify(response.data));
+                    $scope.jsonRecordsAry=response.data;
+                }
+                function errors(response)
+                {
+                    alert(response.data);
+                }
+            }
+            $scope.doDelete=function(rid){
+                 if(confirm("R U Sure?")==false)
+                return;
+                let url="/delete?Kuchrid="+rid;
+                $http.get(url).then(success,errors);
+                function success(response)
+                {
+                    alert(response.data);
+                
+                   
+                }
+                function errors(response){
+                    alert(response.data);
+                }
+            }
+        })
+        </script>
+</head>
+<body ng-app="myModule" ng-controller="myController" >
+    <center>
+        <h1>REQ-MANAGER</h1>
+        <br>
+        <br>
+        Email:
+        <input type="text"  ng-model="email" id="email">
+        <input type="button" value="Fetch All Records" ng-click="doFetchAll(email);">
+<br><br>
+        <table width="700" border="1" rules="all">
+            <tr>
+                 <th>RID</th>
+                <th>Category</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Upto</th>
+                <th>Task</th>
+            </tr>
+            <tr ng-repeat="obj in jsonRecordsAry"> 
+                <td>{{obj.rid}}</td>
+                <td>{{obj.category}}</td>
+                <td>{{obj.address}}</td>
+                <td>{{obj.city}}</td>
+                <td>{{obj.upto}}</td>
+                <td>{{obj.task}}</td>
+
+                <th>
+                    <a href="#" ng-click="doDelete(obj.rid);">Delete</a>
+                </th>
+            </tr>
+        </table>
+    </center>
+    
+</body>
+</html>
